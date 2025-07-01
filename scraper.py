@@ -23,10 +23,19 @@ def get_annonces(url):
     annonces = []
     page = 1
 
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/114.0.0.0 Safari/537.36"
+    }
+
     while True:
         full_url = f"{url}&page={page}"
         print(f"🔎 Récupération page {page}: {full_url}")
-        response = requests.get(full_url)
+        response = requests.get(full_url, headers=headers)
+        if response.status_code == 403:
+            print("🚫 Erreur 403: Accès refusé, le serveur bloque la requête.")
+            break
         if response.status_code != 200:
             print(f"Erreur HTTP {response.status_code} à la page {page}")
             break
@@ -59,6 +68,7 @@ def get_annonces(url):
         page += 1
 
     return annonces
+
 
 def annonce_exists(ad_id):
     # Recherche dans Notion si l'annonce existe déjà via l'id stocké en propriété "Annonce ID"
