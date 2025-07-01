@@ -3,19 +3,23 @@ name: Scrape LeBonCoin
 on:
   schedule:
     - cron: '0 * * * *'  # toutes les heures
-  workflow_dispatch:      # exécution manuelle
+  workflow_dispatch:      # permet exécution manuelle
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: Run scraper
         env:
           LBC_URL: ${{ secrets.LBC_URL }}
