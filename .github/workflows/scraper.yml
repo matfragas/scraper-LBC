@@ -1,14 +1,27 @@
-name: Test Env
+name: Scrape LeBonCoin
 
-on: [workflow_dispatch]
+on:
+  schedule:
+    - cron: '0 * * * *'  # toutes les heures
+  workflow_dispatch:
 
 jobs:
-  test_env:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - name: Print env vars
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 notion-client
+
+      - name: Run scraper
         env:
           LBC_URL: ${{ secrets.LBC_URL }}
-        run: |
-          echo "LBC_URL is $LBC_URL"
-          env
+          NOTION_SECRET: ${{ secrets.NOTION_SECRET }}
+          DATABASE_ID: ${{ secrets.DATABASE_ID }}
+        run: python scraper.py
