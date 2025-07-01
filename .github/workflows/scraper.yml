@@ -21,7 +21,7 @@ jobs:
 
       - name: Run scraper
         env:
-          LBC_URL: ${{ secrets.LBC_URL }}
+          LBC_URL: ${{ vars.LBC_URL }}
           NOTION_SECRET: ${{ secrets.NOTION_SECRET }}
           DATABASE_ID: ${{ secrets.DATABASE_ID }}
         run: python scraper.py
