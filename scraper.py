@@ -82,6 +82,7 @@ def main():
     try:
         print("🚀 Lancement du scraper LeBonCoin")
         url = os.getenv("LBC_URL")
+        print("URL récupérée depuis LBC_URL :", url)
         if not url:
             print("❌ La variable d’environnement LBC_URL est manquante")
             sys.exit(1)
