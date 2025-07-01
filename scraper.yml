@@ -17,6 +17,11 @@ jobs:
           python-version: '3.10'
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: DEBUG ENV
+        run: |
+          echo "📦 LBC_URL = $LBC_URL"
+        env:
+          LBC_URL: ${{ vars.LBC_URL }}
       - name: Run scraper
         run: echo "🔎 LBC_URL transmis à l’environnement : $LBC_URL"
         env:
