@@ -17,6 +17,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run scraper
+        run: echo "🔎 LBC_URL transmis à l’environnement : $LBC_URL"
         env:
           NOTION_SECRET: ${{ secrets.NOTION_SECRET }}
           DATABASE_ID: ${{ secrets.DATABASE_ID }}
