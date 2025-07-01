@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from notion_client import Client
 import hashlib
 
-NOTION_SECRET = secret_abc123
-DATABASE_ID = TON_DATABASE_ID
+NOTION_SECRET = "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"
+DATABASE_ID = "222e43cf42f5809e969a000cebc28997"
 
 notion = Client(auth=NOTION_SECRET)
 
