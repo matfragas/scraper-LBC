@@ -85,8 +85,11 @@ def main():
         print("URL récupérée depuis LBC_URL :", url)
         if not url:
             print("❌ La variable d’environnement LBC_URL est manquante")
+            print("❌ LBC_URL est vide ou non défini")
+            print("Environnement complet :", dict(os.environ))
             sys.exit(1)
 
+        print("✅ URL récupérée depuis LBC_URL :", url)
         html = fetch_annonces(url)
         annonces = parse_annonces(html)
         send_to_notion(annonces)
