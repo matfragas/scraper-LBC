@@ -12,23 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Installer undetected-chromedriver
+        run: pip install undetected-chromedriver
+
       - name: Install Google Chrome
         run: |
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
-          echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
-          google-chrome --version
-  
-      - name: Install ChromeDriver manually (compatible with Chrome 138)
-        run: |
-          DRIVER_VERSION=138.0.0.0
-          echo "Using ChromeDriver version: $DRIVER_VERSION"
-          wget -q https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip
-          unzip chromedriver-linux64.zip
-          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
-          chmod +x /usr/local/bin/chromedriver
-          chromedriver --version
           
       - name: Setup Python
         uses: actions/setup-python@v4
