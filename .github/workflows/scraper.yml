@@ -22,17 +22,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium beautifulsoup4 requests
 
-      - name: Install Chrome
+      - name: Install stable Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y wget gnupg unzip
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get install -f -y
+          google-chrome --version
 
-      - name: Set up ChromeDriver
+      - name: Set up matching ChromeDriver
         run: |
           CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%%.*}")
-          echo "Detected Chrome: $CHROME_VERSION"
-          echo "Matching ChromeDriver: $DRIVER_VERSION"
+          MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${MAJOR_VERSION}")
+          echo "Chrome: $CHROME_VERSION → Driver: $DRIVER_VERSION"
           wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
