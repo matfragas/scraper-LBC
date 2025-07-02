@@ -29,7 +29,7 @@ options.add_argument("--disable-dev-shm-usage")
 # Pas de --user-data-dir ici
 driver = uc.Chrome(options=options)
 
-driver.get(url)
+driver.get(LBC_URL)
 
 # Attente explicite jusqu'à ce qu'au moins une annonce apparaisse
 try:
