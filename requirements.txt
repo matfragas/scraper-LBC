@@ -1,4 +1,5 @@
 selenium
+undetected_chromedriver
 notion-client
 beautifulsoup4
 requests
