@@ -1,8 +1,7 @@
 import os
-import time
-from selenium import webdriver
+import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+import time
 from bs4 import BeautifulSoup
 import requests
 
@@ -19,20 +18,18 @@ print(f"🚀 Lancement du scraper LeBonCoin avec Selenium")
 print(f"🔎 URL : {LBC_URL}")
 
 # Setup Selenium Chrome headless
-options = Options()
-options.headless = True
+options = uc.ChromeOptions()
+options.headless = True  # important pour GitHub Actions
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-options.add_argument("--disable-gpu")
-options.add_argument("--window-size=1920,1080")
-options.add_argument("--lang=fr-FR")
 
-driver = webdriver.Chrome(options=options)
+# Pas de --user-data-dir ici
+driver = uc.Chrome(options=options)
 
 try:
     driver.get(LBC_URL)
     time.sleep(5)  # attendre que la page charge (ajuste si besoin)
-
+    print("✅ Titre de la page :", driver.title)
     html = driver.page_source
 
     soup = BeautifulSoup(html, "html.parser")
