@@ -1,6 +1,9 @@
 import os
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 from bs4 import BeautifulSoup
 import requests
@@ -26,33 +29,29 @@ options.add_argument("--disable-dev-shm-usage")
 # Pas de --user-data-dir ici
 driver = uc.Chrome(options=options)
 
+driver.get(url)
+
+# Attente explicite jusqu'à ce qu'au moins une annonce apparaisse
 try:
-    driver.get(LBC_URL)
-    time.sleep(5)  # attendre que la page charge (ajuste si besoin)
-    print("✅ Titre de la page :", driver.title)
-    html = driver.page_source
-
-    soup = BeautifulSoup(html, "html.parser")
-
-    # Extraction des annonces
-    ads = soup.select("li[data-qa-id='aditem_container']")
-    print(f"🔄 {len(ads)} annonces récupérées.")
-
-    for ad in ads:
-        title = ad.select_one("[data-qa-id='aditem_title']")
-        price = ad.select_one("[data-qa-id='aditem_price']")
-        location = ad.select_one("[data-qa-id='aditem_location']")
-        date = ad.select_one("[data-qa-id='aditem_date']")
-        url = ad.select_one("a")["href"] if ad.select_one("a") else None
-
-        print("---")
-        print("Titre:", title.text.strip() if title else "N/A")
-        print("Prix:", price.text.strip() if price else "N/A")
-        print("Localisation:", location.text.strip() if location else "N/A")
-        print("Date:", date.text.strip() if date else "N/A")
-        print("URL:", f"https://www.leboncoin.fr{url}" if url else "N/A")
-
-        # TODO: Appeler fonction pour push dans Notion + gestion doublons
-
-finally:
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "a[data-qa-id='aditem_container']"))
+    )
+except:
+    print("❌ Les annonces ne se sont pas chargées.")
     driver.quit()
+    exit()
+
+# Récupération des annonces
+annonces = driver.find_elements(By.CSS_SELECTOR, "a[data-qa-id='aditem_container']")
+print(f"🔄 {len(annonces)} annonces récupérées.")
+
+# Exemple : afficher les titres
+for a in annonces:
+    try:
+        titre = a.find_element(By.CSS_SELECTOR, "[data-qa-id='aditem_title']").text
+        prix = a.find_element(By.CSS_SELECTOR, "[data-qa-id='aditem_price']").text
+        print(f"🏠 {titre} - {prix}")
+    except:
+        pass
+
+driver.quit()
