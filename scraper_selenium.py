@@ -22,7 +22,7 @@ print(f"🔎 URL : {LBC_URL}")
 
 # Setup Selenium Chrome headless
 options = uc.ChromeOptions()
-options.headless = True  # important pour GitHub Actions
+options.headless = False  # important pour GitHub Actions
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
