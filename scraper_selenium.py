@@ -1,38 +1,28 @@
-import os
-import undetected_chromedriver as uc
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import undetected_chromedriver as uc
 import time
-from bs4 import BeautifulSoup
-import requests
 
-# Notion API setup
-NOTION_SECRET = os.getenv("NOTION_SECRET")
-DATABASE_ID = os.getenv("DATABASE_ID")
+print("🚀 Lancement du scraper LeBonCoin avec undetected_chromedriver")
 
-LBC_URL = os.getenv("LBC_URL")
-if not LBC_URL:
-    print("❌ La variable d’environnement LBC_URL est manquante")
-    exit(1)
-
-print(f"🚀 Lancement du scraper LeBonCoin avec Selenium")
-print(f"🔎 URL : {LBC_URL}")
-
-# Setup Selenium Chrome headless
 options = uc.ChromeOptions()
-options.headless = False  # important pour GitHub Actions
+# options.headless = True  # TEST SANS headless pour le moment
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
 
-# Pas de --user-data-dir ici
 driver = uc.Chrome(options=options)
 
-driver.get(LBC_URL)
+url = "https://www.leboncoin.fr/recherche?category=9&locations=Louverné_53950__48.12273_-0.72003_5000,L'Huisserie_53970__48.02281_-0.77001_5000,Saint-Berthevin_53940__48.06967_-0.83152_5000,Chang%C3%A9_53810__48.09901_-0.78975_5000,Laval_53000__48.07268_-0.77307_5000&price=min-320000&square=85-max&real_estate_type=1,3"
+
+print(f"🔎 URL : {url}")
+driver.get(url)
+
+time.sleep(5)  # ⏱ important pour charger les annonces JS
 
 print(f"✅ Titre de la page : {driver.title}")
-print(driver.page_source[:1000])  # Affiche les 1000 premiers caractères du HTML
+print(driver.page_source[:1000])  # pour vérifier si la page contient bien les annonces
 
 # Attente explicite jusqu'à ce qu'au moins une annonce apparaisse
 try:
