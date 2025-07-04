@@ -31,6 +31,9 @@ driver = uc.Chrome(options=options)
 
 driver.get(LBC_URL)
 
+print(f"✅ Titre de la page : {driver.title}")
+print(driver.page_source[:1000])  # Affiche les 1000 premiers caractères du HTML
+
 # Attente explicite jusqu'à ce qu'au moins une annonce apparaisse
 try:
     WebDriverWait(driver, 10).until(
