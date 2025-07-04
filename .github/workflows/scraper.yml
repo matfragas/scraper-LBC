@@ -12,16 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Installer undetected-chromedriver
-        run: pip install undetected-chromedriver
-
-      - name: Install Google Chrome
+      - name: Install Chrome 138
         run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
-          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          
+          wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7615.0/linux64/chrome-linux64.zip
+          unzip chrome-linux64.zip
+          sudo mv chrome-linux64 /opt/chrome
+          sudo ln -s /opt/chrome/chrome /usr/bin/google-chrome
+        
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -33,7 +30,10 @@ jobs:
 
       - name: Run scraper
         env:
+          DISPLAY: :99  # nécessaire pour Chrome sans headless
           LBC_URL: ${{ vars.LBC_URL }}
           NOTION_SECRET: ${{ secrets.NOTION_SECRET }}
           DATABASE_ID: ${{ secrets.DATABASE_ID }}
-        run: python scraper_selenium.py
+        run: |
+          Xvfb :99 -ac &  # démarrage d’un affichage virtuel
+          python scraper_selenium.py
