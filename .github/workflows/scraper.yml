@@ -1,8 +1,8 @@
 name: Scrape LeBonCoin with Selenium
 
 on:
-  schedule:
-    - cron: '0 7,12,17 * * *'  # toute les 5 heures à partir de 7h00
+  #schedule:
+  #  - cron: '0 7,12,17 * * *'  # toute les 5 heures à partir de 7h00
   workflow_dispatch:
 
 jobs:
